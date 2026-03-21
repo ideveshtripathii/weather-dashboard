@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-500: #3b82f6;
+  --color-brand-600: #2563eb;
+  --color-brand-900: #1e3a8a;
+}
+
+body {
+  @apply bg-slate-950 text-slate-100 antialiased font-sans;
+}
+
+/* Custom scrollbar for horizontal scrolling charts */
+::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: theme("colors.slate.800"); 
+}
+::-webkit-scrollbar-thumb {
+  background: theme("colors.slate.600"); 
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: theme("colors.slate.500"); 
+}
