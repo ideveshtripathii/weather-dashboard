@@ -18,6 +18,7 @@ export function useWeather(lat, lon, date) {
         
         const [weatherRes, airRes] = await Promise.all([
           axios.get(`https://api.open-meteo.com/v1/forecast`, {
+            timeout: 10000,
             params: {
               latitude: lat,
               longitude: lon,
@@ -30,6 +31,7 @@ export function useWeather(lat, lon, date) {
             }
           }),
           axios.get(`https://air-quality-api.open-meteo.com/v1/air-quality`, {
+            timeout: 10000,
             params: {
               latitude: lat,
               longitude: lon,
@@ -47,7 +49,11 @@ export function useWeather(lat, lon, date) {
           airQuality: airRes.data
         });
       } catch (err) {
-        setError(err.message);
+        if (err.code === 'ECONNABORTED') {
+          setError("Request timed out. The weather service took too long to respond.");
+        } else {
+          setError(err.response?.data?.reason || err.message || "Failed to fetch weather data");
+        }
       } finally {
         setLoading(false);
       }
@@ -76,6 +82,7 @@ export function useHistoricalWeather(lat, lon, startDate, endDate) {
 
         const [weatherRes, airRes] = await Promise.all([
           axios.get(`https://archive-api.open-meteo.com/v1/archive`, {
+            timeout: 10000,
             params: {
               latitude: lat,
               longitude: lon,
@@ -86,6 +93,7 @@ export function useHistoricalWeather(lat, lon, startDate, endDate) {
             }
           }).catch(() => ({ data: {} })), // Fallback logic if archive fails
           axios.get(`https://air-quality-api.open-meteo.com/v1/air-quality`, {
+            timeout: 10000,
             params: {
               latitude: lat,
               longitude: lon,
@@ -102,7 +110,11 @@ export function useHistoricalWeather(lat, lon, startDate, endDate) {
           airQuality: airRes.data
         });
       } catch (err) {
-        setError(err.message);
+        if (err.code === 'ECONNABORTED') {
+          setError("Request timed out. The weather service took too long to respond.");
+        } else {
+          setError(err.response?.data?.reason || err.message || "Failed to fetch historical data");
+        }
       } finally {
         setLoading(false);
       }
