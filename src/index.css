@@ -1,29 +1,63 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-50: #eff6ff;
-  --color-brand-100: #dbeafe;
-  --color-brand-500: #3b82f6;
-  --color-brand-600: #2563eb;
-  --color-brand-900: #1e3a8a;
+  --color-brand-50: #fafafa;
+  --color-brand-100: #f4f4f5;
+  --color-brand-500: #71717a;
+  --color-brand-600: #52525b;
+  --color-brand-900: #18181b;
 }
 
 body {
-  @apply bg-slate-950 text-slate-100 antialiased font-sans;
+  @apply text-zinc-200 antialiased font-sans min-h-screen relative overflow-x-hidden;
+  background-color: #111113; /* slightly warm dark grey */
+  background-image: 
+    radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.03) 0%, transparent 40%),
+    linear-gradient(160deg, #18181b 0%, #09090b 100%);
+  background-attachment: fixed;
 }
 
-/* Custom scrollbar for horizontal scrolling charts */
+/* Realistic Physical Box Simulator */
+.realistic-card {
+  @apply relative overflow-hidden rounded-[2rem] transition-all duration-300;
+  /* Thick physical frosted glass */
+  background: linear-gradient(135deg, rgba(45, 45, 50, 0.6) 0%, rgba(25, 25, 30, 0.8) 100%);
+  backdrop-filter: blur(20px);
+  
+  /* Volumetric lit borders */
+  border: 1px solid transparent;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.9);
+  border-right: 1px solid rgba(0, 0, 0, 0.4);
+  
+  /* Physical multi-layered shadows */
+  box-shadow: 
+    8px 16px 24px -5px rgba(0, 0, 0, 0.6),
+    inset 0px 2px 4px 0px rgba(255, 255, 255, 0.06),
+    inset 0px -4px 6px 0px rgba(0, 0, 0, 0.4);
+}
+
+.realistic-card:hover {
+  @apply -translate-y-1 scale-[1.01];
+  box-shadow: 
+    12px 24px 32px -5px rgba(0, 0, 0, 0.7),
+    inset 0px 2px 4px 0px rgba(255, 255, 255, 0.08),
+    inset 0px -4px 6px 0px rgba(0, 0, 0, 0.4);
+}
+
+/* Custom scrollbar */
 ::-webkit-scrollbar {
-  height: 8px;
-  width: 8px;
+  height: 6px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: theme("colors.slate.800"); 
+  @apply bg-transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: theme("colors.slate.600"); 
-  border-radius: 4px;
+  @apply bg-zinc-600 rounded-full border-[1px] border-black/30;
+  box-shadow: inset 1px 1px 1px rgba(255,255,255,0.2);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: theme("colors.slate.500"); 
+  @apply bg-zinc-400;
 }

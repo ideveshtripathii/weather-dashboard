@@ -52,37 +52,37 @@ export default function HistoricalWeather() {
   }
 
   return (
-    <div className="p-6 md:p-10 max-w-7xl mx-auto animate-in fade-in duration-500">
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+    <div className="p-6 md:p-10 max-w-7xl mx-auto animate-in fade-in duration-700 zoom-in-[0.98]">
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 realistic-card p-8">
         <div>
-          <div className="flex items-center space-x-2 text-brand-400 mb-2">
-            <MapPin className="w-5 h-5" />
-            <h2 className="font-semibold text-lg">{location.name}</h2>
+          <div className="flex items-center space-x-2 text-zinc-400 mb-2 font-medium tracking-wide">
+            <MapPin className="w-5 h-5 text-zinc-300" />
+            <h2 className="text-sm uppercase tracking-widest">{location.name}</h2>
           </div>
-          <h1 className="text-3xl md:text-5xl font-bold tracking-tight">
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-br from-white to-zinc-400 bg-clip-text text-transparent">
             Historical Trends
           </h1>
         </div>
 
-        <div className="flex flex-wrap items-center gap-4 bg-slate-900 border border-slate-800 p-2 lg:p-3 rounded-2xl shadow-sm">
-          <CalendarRange className="w-5 h-5 text-slate-400 ml-2" />
+        <div className="flex items-center gap-3 bg-black/20 p-2 rounded-2xl border border-white/5">
+          <CalendarRange className="w-5 h-5 text-zinc-400 ml-2 hidden sm:block" />
           <input
             type="date"
             max={endDate}
             min={dayjs(endDate).subtract(2, 'year').format('YYYY-MM-DD')}
             value={startDate}
             onChange={handleStartChange}
-            className="bg-transparent border-none text-sm font-medium focus:outline-none text-slate-200 ml-2"
+            className="pl-3 pr-4 py-2 bg-transparent hover:bg-white/5 rounded-xl border-none text-sm font-semibold focus:outline-none text-zinc-200 cursor-pointer transition-colors"
             style={{ colorScheme: 'dark' }}
           />
-          <span className="text-slate-500">-</span>
+          <span className="text-zinc-600">-</span>
           <input
             type="date"
             max={maxDate}
             min={startDate}
             value={endDate}
             onChange={handleEndChange}
-            className="bg-transparent border-none text-sm font-medium focus:outline-none text-slate-200"
+            className="pl-3 pr-4 py-2 bg-transparent hover:bg-white/5 rounded-xl border-none text-sm font-semibold focus:outline-none text-zinc-200 cursor-pointer transition-colors"
             style={{ colorScheme: 'dark' }}
           />
         </div>
@@ -103,14 +103,14 @@ export default function HistoricalWeather() {
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-slate-800 border border-slate-700 p-3 rounded-lg shadow-xl text-sm z-50">
-        <p className="text-slate-300 mb-2 font-medium">{label}</p>
+      <div className="bg-zinc-900/90 backdrop-blur-md border border-zinc-700 p-4 rounded-xl shadow-2xl text-sm z-50">
+        <p className="text-zinc-200 mb-3 font-semibold border-b border-zinc-700/50 pb-2">{label}</p>
         {payload.map((entry, index) => {
           let val = entry.value;
           if (entry.name === 'Sunrise' || entry.name === 'Sunrise (IST)') val = entry.payload.sunrise;
           if (entry.name === 'Sunset' || entry.name === 'Sunset (IST)') val = entry.payload.sunset;
           return (
-            <p key={index} style={{ color: entry.color }} className="font-medium">
+            <p key={index} style={{ color: entry.color }} className="font-medium mt-1">
               {entry.name}: {val}
             </p>
           );
@@ -122,8 +122,8 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 const ChartBox = ({ title, children }) => (
-  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm mb-6">
-    <h3 className="text-lg font-semibold text-slate-200 mb-6">{title}</h3>
+  <div className="realistic-card p-6 sm:p-8 mb-6">
+    <h3 className="text-lg font-bold text-zinc-300 mb-6 tracking-wide drop-shadow-sm">{title}</h3>
     <div className="w-full h-[350px]">
       {children}
     </div>

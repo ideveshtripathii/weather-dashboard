@@ -2,22 +2,25 @@ import React from 'react';
 import { Thermometer, Droplets, Sun, Wind, Activity } from 'lucide-react';
 import dayjs from 'dayjs';
 
-const Card = ({ title, icon: Icon, children }) => (
-  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
-    <div className="flex items-center space-x-3 mb-6">
-      <div className="p-2 bg-slate-800 rounded-lg">
-        <Icon className="w-5 h-5 text-brand-500" />
+const Card = ({ title, icon: Icon, children, glowColor }) => (
+  <div className="realistic-card p-6 sm:p-7 group">
+    {/* Realistic inner light scatter effect */}
+    <div className={`absolute -top-12 -right-12 w-32 h-32 bg-gradient-radial from-${glowColor}/20 to-transparent opacity-50 blur-2xl group-hover:opacity-80 transition-opacity duration-500`} />
+    
+    <div className="flex justify-between items-center mb-6 pb-4 border-b border-zinc-700/50 relative z-10">
+      <h3 className="text-sm font-bold text-zinc-400 tracking-wider uppercase drop-shadow-sm">{title}</h3>
+      <div className={`p-2 bg-gradient-to-br from-zinc-800 to-zinc-900 rounded-xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),_0_2px_4px_rgba(0,0,0,0.5)] border border-zinc-700/80`}>
+        <Icon className={`w-4 h-4 text-${glowColor.replace('-500', '-300').replace('orange-400', 'orange-300')} drop-shadow-[0_0_8px_currentColor]`} />
       </div>
-      <h3 className="text-lg font-semibold text-slate-200">{title}</h3>
     </div>
-    <div className="space-y-4">{children}</div>
+    <div className="space-y-4 relative z-10">{children}</div>
   </div>
 );
 
 const Row = ({ label, value }) => (
-  <div className="flex justify-between items-center border-b border-slate-800/50 pb-2 last:border-0 last:pb-0">
-    <span className="text-slate-400 text-sm">{label}</span>
-    <span className="text-slate-100 font-medium">{value}</span>
+  <div className="flex justify-between items-center group py-0.5">
+    <span className="text-zinc-500 text-sm font-medium transition-colors group-hover:text-zinc-400">{label}</span>
+    <span className="text-zinc-100 font-semibold tracking-wide drop-shadow-md">{value}</span>
   </div>
 );
 
@@ -40,29 +43,29 @@ export function WeatherCards({ weatherData, airData, isFahrenheit }) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-      <Card title="Temperature" icon={Thermometer}>
+      <Card title="Temperature" icon={Thermometer} glowColor="red-500">
         <Row label="Current" value={getT(cur.temperature_2m)} />
         <Row label="Maximum" value={getT(d.temperature_2m_max?.[0])} />
         <Row label="Minimum" value={getT(d.temperature_2m_min?.[0])} />
       </Card>
 
-      <Card title="Atmosphere" icon={Droplets}>
+      <Card title="Atmosphere" icon={Droplets} glowColor="blue-500">
         <Row label="Relative Humidity" value={`${cur.relative_humidity_2m ?? '--'}%`} />
         <Row label="Precipitation" value={`${cur.precipitation ?? '--'} mm`} />
         <Row label="UV Index" value={d.uv_index_max?.[0] ?? '--'} />
       </Card>
 
-      <Card title="Sun Cycle" icon={Sun}>
+      <Card title="Sun Cycle" icon={Sun} glowColor="orange-400">
         <Row label="Sunrise" value={getTDate(d.sunrise?.[0])} />
         <Row label="Sunset" value={getTDate(d.sunset?.[0])} />
       </Card>
 
-      <Card title="Wind & Air" icon={Wind}>
+      <Card title="Wind & Air" icon={Wind} glowColor="cyan-500">
         <Row label="Max Wind Speed" value={`${d.wind_speed_10m_max?.[0] ?? '--'} km/h`} />
         <Row label="Precip. Probability" value={`${d.precipitation_probability_max?.[0] ?? '--'}%`} />
       </Card>
 
-      <Card title="Air Quality" icon={Activity}>
+      <Card title="Air Quality" icon={Activity} glowColor="emerald-500">
         <Row label="AQI" value={aq.european_aqi ?? '--'} />
         <Row label="PM10 | PM2.5" value={`${aq.pm10 ?? '--'} | ${aq.pm2_5 ?? '--'} μg/m³`} />
         <Row label="CO | CO₂" value={`${aq.carbon_monoxide ?? '--'} | ${aq.carbon_dioxide ?? '--'} μg/m³`} />

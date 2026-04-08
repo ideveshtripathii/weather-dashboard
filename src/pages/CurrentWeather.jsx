@@ -26,32 +26,32 @@ export default function CurrentWeather() {
   }
 
   return (
-    <div className="p-6 md:p-10 max-w-7xl mx-auto animate-in fade-in duration-500">
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+    <div className="p-6 md:p-10 max-w-7xl mx-auto animate-in fade-in duration-700 zoom-in-[0.98]">
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 realistic-card p-8 group">
         <div>
-          <div className="flex items-center space-x-2 text-brand-400 mb-2">
-            <MapPin className="w-5 h-5" />
-            <h2 className="font-semibold text-lg">{location.name}</h2>
+          <div className="flex items-center space-x-2 text-zinc-400 mb-2 font-medium tracking-wide">
+            <MapPin className="w-5 h-5 text-zinc-300" />
+            <h2 className="text-sm uppercase tracking-widest">{location.name}</h2>
           </div>
-          <h1 className="text-3xl md:text-5xl font-bold tracking-tight">
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-br from-white to-zinc-400 bg-clip-text text-transparent">
             Current Weather
           </h1>
         </div>
 
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="flex items-center gap-3 bg-black/20 p-2 rounded-2xl border border-white/5">
           <button
             onClick={() => setIsFahrenheit(!isFahrenheit)}
-            className="px-4 py-2 bg-slate-800 border border-slate-700 hover:bg-slate-700 rounded-lg text-sm font-medium transition-colors"
+            className="px-5 py-2.5 bg-zinc-800/80 hover:bg-zinc-700/80 border border-zinc-700/50 rounded-xl text-sm font-semibold text-zinc-200 transition-all hover:shadow-lg hover:shadow-white/5 cursor-pointer"
           >
             {isFahrenheit ? 'Switch to °C' : 'Switch to °F'}
           </button>
-          <div className="relative">
-            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+          <div className="relative group">
+            <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 group-hover:text-zinc-200 transition-colors pointer-events-none" />
             <input
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              className="pl-10 pr-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow appearance-none color-scheme-dark"
+              className="pl-11 pr-5 py-2.5 bg-zinc-800/50 hover:bg-zinc-700/50 border border-zinc-700/50 rounded-xl text-sm font-semibold text-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-500/30 transition-all appearance-none cursor-pointer"
               style={{ colorScheme: 'dark' }}
             />
           </div>

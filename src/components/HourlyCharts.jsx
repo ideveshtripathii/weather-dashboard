@@ -5,8 +5,8 @@ import {
 import dayjs from 'dayjs';
 
 const ChartWrapper = ({ title, data, children }) => (
-  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm mb-6">
-    <h3 className="text-lg font-semibold text-slate-200 mb-6">{title}</h3>
+  <div className="realistic-card p-6 sm:p-8 mb-6">
+    <h3 className="text-lg font-bold text-zinc-300 mb-6 tracking-wide drop-shadow-sm">{title}</h3>
     <div className="w-full h-[350px]">
       {children}
     </div>
@@ -16,10 +16,10 @@ const ChartWrapper = ({ title, data, children }) => (
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-slate-800 border border-slate-700 p-3 rounded-lg shadow-xl text-sm z-50">
-        <p className="text-slate-300 mb-2 font-medium">{dayjs(label).format('hh:mm A')}</p>
+      <div className="bg-zinc-900/90 backdrop-blur-md border border-zinc-700 p-4 rounded-xl shadow-2xl text-sm z-50">
+        <p className="text-zinc-200 mb-3 font-semibold border-b border-zinc-700/50 pb-2">{dayjs(label).format('hh:mm A')}</p>
         {payload.map((entry, index) => (
-          <p key={index} style={{ color: entry.color }} className="font-medium">
+          <p key={index} style={{ color: entry.color }} className="font-medium mt-1">
             {entry.name}: {entry.value}
           </p>
         ))}
