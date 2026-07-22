@@ -5,9 +5,9 @@ import {
 import dayjs from 'dayjs';
 
 const ChartWrapper = ({ title, data, children }) => (
-  <div className="realistic-card p-6 sm:p-8 mb-6">
-    <h3 className="text-lg font-bold text-zinc-300 mb-6 tracking-wide drop-shadow-sm">{title}</h3>
-    <div className="w-full h-[350px]">
+  <div className="realistic-card p-4 sm:p-6 mb-6">
+    <h3 className="text-base sm:text-lg font-bold text-zinc-300 mb-4 sm:mb-6 tracking-wide drop-shadow-sm">{title}</h3>
+    <div className="w-full h-[260px] sm:h-[320px] md:h-[350px]">
       {children}
     </div>
   </div>
@@ -16,11 +16,11 @@ const ChartWrapper = ({ title, data, children }) => (
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-zinc-900/90 backdrop-blur-md border border-zinc-700 p-4 rounded-xl shadow-2xl text-sm z-50">
-        <p className="text-zinc-200 mb-3 font-semibold border-b border-zinc-700/50 pb-2">{dayjs(label).format('hh:mm A')}</p>
+      <div className="bg-slate-950/85 backdrop-blur-md border border-slate-800 p-3 sm:p-4 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.6)] text-xs sm:text-sm z-50">
+        <p className="text-slate-300 mb-2 font-bold border-b border-slate-900/60 pb-2 tracking-wide">{dayjs(label).format('hh:mm A')}</p>
         {payload.map((entry, index) => (
-          <p key={index} style={{ color: entry.color }} className="font-medium mt-1">
-            {entry.name}: {entry.value}
+          <p key={index} style={{ color: entry.color }} className="font-semibold mt-1">
+            {entry.name}: <span className="text-white">{entry.value}</span>
           </p>
         ))}
       </div>
@@ -55,100 +55,148 @@ export function HourlyCharts({ weatherData, airData, isFahrenheit }) {
   const timeFormatter = (t) => dayjs(t).format('HH:mm');
 
   return (
-    <div className="space-y-6 mt-8">
-      <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-brand-100 to-white">
+    <div className="space-y-6 mt-10">
+      <h2 className="text-xl sm:text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 tracking-tight">
         Hourly Forecast Visualizations
       </h2>
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <ChartWrapper title={`Temperature (${isFahrenheit ? '°F' : '°C'})`} data={chartData}>
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+            <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <defs>
+                <filter id="glowTemp" x="-10%" y="-10%" width="120%" height="120%">
+                  <feGaussianBlur stdDeviation="2" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
                 <linearGradient id="colorTemp" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#ef4444" stopOpacity={0.8}/>
+                  <stop offset="5%" stopColor="#ef4444" stopOpacity={0.35}/>
                   <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
-              <XAxis dataKey="time" tickFormatter={timeFormatter} stroke="#94a3b8" tick={{fontSize: 12}} />
-              <YAxis stroke="#94a3b8" tick={{fontSize: 12}} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} strokeOpacity={0.2} />
+              <XAxis dataKey="time" tickFormatter={timeFormatter} stroke="#64748b" tick={{fontSize: 11}} />
+              <YAxis stroke="#64748b" tick={{fontSize: 11}} />
               <Tooltip content={<CustomTooltip />} />
-              <Area type="monotone" dataKey="temperature" name="Temp" stroke="#ef4444" fillOpacity={1} fill="url(#colorTemp)" />
-              <Brush dataKey="time" height={30} stroke="#3b82f6" fill="#1e293b" tickFormatter={timeFormatter} />
+              <Area type="monotone" dataKey="temperature" name="Temp" stroke="#ef4444" strokeWidth={3} filter="url(#glowTemp)" fillOpacity={1} fill="url(#colorTemp)" />
+              <Brush dataKey="time" height={28} stroke="#6366f1" fill="#090d16" tickFormatter={timeFormatter} />
             </AreaChart>
           </ResponsiveContainer>
         </ChartWrapper>
 
         <ChartWrapper title="Relative Humidity (%)" data={chartData}>
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={chartData}>
+            <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <defs>
+                <filter id="glowHum" x="-10%" y="-10%" width="120%" height="120%">
+                  <feGaussianBlur stdDeviation="2" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
                 <linearGradient id="colorHum" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
+                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.35}/>
                   <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
-              <XAxis dataKey="time" tickFormatter={timeFormatter} stroke="#94a3b8" />
-              <YAxis stroke="#94a3b8" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} strokeOpacity={0.2} />
+              <XAxis dataKey="time" tickFormatter={timeFormatter} stroke="#64748b" tick={{fontSize: 11}} />
+              <YAxis stroke="#64748b" tick={{fontSize: 11}} />
               <Tooltip content={<CustomTooltip />} />
-              <Area type="monotone" dataKey="humidity" name="Humidity" stroke="#3b82f6" fill="url(#colorHum)" />
-              <Brush dataKey="time" height={30} stroke="#3b82f6" fill="#1e293b" tickFormatter={timeFormatter}/>
+              <Area type="monotone" dataKey="humidity" name="Humidity" stroke="#3b82f6" strokeWidth={3} filter="url(#glowHum)" fill="url(#colorHum)" />
+              <Brush dataKey="time" height={28} stroke="#6366f1" fill="#090d16" tickFormatter={timeFormatter}/>
             </AreaChart>
           </ResponsiveContainer>
         </ChartWrapper>
 
         <ChartWrapper title="Precipitation (mm)" data={chartData}>
           <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
-              <XAxis dataKey="time" tickFormatter={timeFormatter} stroke="#94a3b8" />
-              <YAxis stroke="#94a3b8" />
+            <ComposedChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} strokeOpacity={0.2} />
+              <XAxis dataKey="time" tickFormatter={timeFormatter} stroke="#64748b" tick={{fontSize: 11}} />
+              <YAxis stroke="#64748b" tick={{fontSize: 11}} />
               <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="precipitation" name="Precipitation" fill="#60a5fa" radius={[4, 4, 0, 0]} />
-              <Brush dataKey="time" height={30} stroke="#3b82f6" fill="#1e293b" tickFormatter={timeFormatter}/>
+              <Bar dataKey="precipitation" name="Precipitation" fill="#60a5fa" fillOpacity={0.85} radius={[3, 3, 0, 0]} />
+              <Brush dataKey="time" height={28} stroke="#6366f1" fill="#090d16" tickFormatter={timeFormatter}/>
             </ComposedChart>
           </ResponsiveContainer>
         </ChartWrapper>
         
         <ChartWrapper title="Visibility (km)" data={chartData}>
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
-              <XAxis dataKey="time" tickFormatter={timeFormatter} stroke="#94a3b8" />
-              <YAxis stroke="#94a3b8" />
+            <LineChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <defs>
+                <filter id="glowVis" x="-10%" y="-10%" width="120%" height="120%">
+                  <feGaussianBlur stdDeviation="2" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} strokeOpacity={0.2} />
+              <XAxis dataKey="time" tickFormatter={timeFormatter} stroke="#64748b" tick={{fontSize: 11}} />
+              <YAxis stroke="#64748b" tick={{fontSize: 11}} />
               <Tooltip content={<CustomTooltip />} />
-              <Line type="monotone" dataKey="visibility" name="Visibility" stroke="#f59e0b" strokeWidth={3} dot={false} />
-              <Brush dataKey="time" height={30} stroke="#3b82f6" fill="#1e293b" tickFormatter={timeFormatter}/>
+              <Line type="monotone" dataKey="visibility" name="Visibility" stroke="#f59e0b" strokeWidth={3} filter="url(#glowVis)" dot={false} />
+              <Brush dataKey="time" height={28} stroke="#6366f1" fill="#090d16" tickFormatter={timeFormatter}/>
             </LineChart>
           </ResponsiveContainer>
         </ChartWrapper>
 
         <ChartWrapper title="Wind Speed (km/h)" data={chartData}>
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
-              <XAxis dataKey="time" tickFormatter={timeFormatter} stroke="#94a3b8" />
-              <YAxis stroke="#94a3b8" />
+            <LineChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <defs>
+                <filter id="glowWind" x="-10%" y="-10%" width="120%" height="120%">
+                  <feGaussianBlur stdDeviation="2" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} strokeOpacity={0.2} />
+              <XAxis dataKey="time" tickFormatter={timeFormatter} stroke="#64748b" tick={{fontSize: 11}} />
+              <YAxis stroke="#64748b" tick={{fontSize: 11}} />
               <Tooltip content={<CustomTooltip />} />
-              <Line type="monotone" dataKey="windSpeed" name="Wind Speed" stroke="#10b981" strokeWidth={3} dot={false} />
-              <Brush dataKey="time" height={30} stroke="#3b82f6" fill="#1e293b" tickFormatter={timeFormatter}/>
+              <Line type="monotone" dataKey="windSpeed" name="Wind Speed" stroke="#10b981" strokeWidth={3} filter="url(#glowWind)" dot={false} />
+              <Brush dataKey="time" height={28} stroke="#6366f1" fill="#090d16" tickFormatter={timeFormatter}/>
             </LineChart>
           </ResponsiveContainer>
         </ChartWrapper>
 
         <ChartWrapper title="PM10 & PM2.5 (μg/m³)" data={chartData}>
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
-              <XAxis dataKey="time" tickFormatter={timeFormatter} stroke="#94a3b8" />
-              <YAxis stroke="#94a3b8" />
+            <LineChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <defs>
+                <filter id="glowPm10" x="-10%" y="-10%" width="120%" height="120%">
+                  <feGaussianBlur stdDeviation="2" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+                <filter id="glowPm25" x="-10%" y="-10%" width="120%" height="120%">
+                  <feGaussianBlur stdDeviation="2" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} strokeOpacity={0.2} />
+              <XAxis dataKey="time" tickFormatter={timeFormatter} stroke="#64748b" tick={{fontSize: 11}} />
+              <YAxis stroke="#64748b" tick={{fontSize: 11}} />
               <Tooltip content={<CustomTooltip />} />
-              <Legend verticalAlign="top" height={36}/>
-              <Line type="monotone" dataKey="pm10" name="PM10" stroke="#f43f5e" strokeWidth={2} dot={false} />
-              <Line type="monotone" dataKey="pm2_5" name="PM2.5" stroke="#ec4899" strokeWidth={2} dot={false} />
-              <Brush dataKey="time" height={30} stroke="#3b82f6" fill="#1e293b" tickFormatter={timeFormatter}/>
+              <Legend verticalAlign="top" height={36} iconType="circle" />
+              <Line type="monotone" dataKey="pm10" name="PM10" stroke="#f43f5e" strokeWidth={2.5} filter="url(#glowPm10)" dot={false} />
+              <Line type="monotone" dataKey="pm2_5" name="PM2.5" stroke="#ec4899" strokeWidth={2.5} filter="url(#glowPm25)" dot={false} />
+              <Brush dataKey="time" height={28} stroke="#6366f1" fill="#090d16" tickFormatter={timeFormatter}/>
             </LineChart>
           </ResponsiveContainer>
         </ChartWrapper>

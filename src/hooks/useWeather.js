@@ -6,6 +6,9 @@ export function useWeather(lat, lon, date) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
+
+  const refetch = () => setRetryCount(prev => prev + 1);
 
   useEffect(() => {
     if (!lat || !lon) return;
@@ -51,6 +54,8 @@ export function useWeather(lat, lon, date) {
       } catch (err) {
         if (err.code === 'ECONNABORTED') {
           setError("Request timed out. The weather service took too long to respond.");
+        } else if (err.response?.status === 503) {
+          setError("The weather service is temporarily busy/overloaded. Please try again.");
         } else {
           setError(err.response?.data?.reason || err.message || "Failed to fetch weather data");
         }
@@ -60,15 +65,18 @@ export function useWeather(lat, lon, date) {
     };
 
     fetchWeather();
-  }, [lat, lon, date]);
+  }, [lat, lon, date, retryCount]);
 
-  return { data, loading, error };
+  return { data, loading, error, refetch };
 }
 
 export function useHistoricalWeather(lat, lon, startDate, endDate) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
+
+  const refetch = () => setRetryCount(prev => prev + 1);
 
   useEffect(() => {
     if (!lat || !lon || !startDate || !endDate) return;
@@ -112,6 +120,8 @@ export function useHistoricalWeather(lat, lon, startDate, endDate) {
       } catch (err) {
         if (err.code === 'ECONNABORTED') {
           setError("Request timed out. The weather service took too long to respond.");
+        } else if (err.response?.status === 503) {
+          setError("The weather service is temporarily busy/overloaded. Please try again.");
         } else {
           setError(err.response?.data?.reason || err.message || "Failed to fetch historical data");
         }
@@ -121,7 +131,7 @@ export function useHistoricalWeather(lat, lon, startDate, endDate) {
     };
 
     fetchHistorical();
-  }, [lat, lon, startDate, endDate]);
+  }, [lat, lon, startDate, endDate, retryCount]);
 
-  return { data, loading, error };
+  return { data, loading, error, refetch };
 }

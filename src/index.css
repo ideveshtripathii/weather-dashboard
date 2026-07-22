@@ -1,49 +1,80 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-50: #fafafa;
-  --color-brand-100: #f4f4f5;
-  --color-brand-500: #71717a;
-  --color-brand-600: #52525b;
-  --color-brand-900: #18181b;
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  --color-brand-50: #eef2ff;
+  --color-brand-100: #e0e7ff;
+  --color-brand-500: #6366f1; /* Premium indigo tint */
+  --color-brand-600: #4f46e5;
+  --color-brand-900: #312e81;
 }
 
 body {
   @apply text-zinc-200 antialiased font-sans min-h-screen relative overflow-x-hidden;
-  background-color: #111113; /* slightly warm dark grey */
+  background-color: #030712; /* Deep slate-950 */
   background-image: 
-    radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.03) 0%, transparent 40%),
-    linear-gradient(160deg, #18181b 0%, #09090b 100%);
+    radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.04) 0%, transparent 40%),
+    linear-gradient(160deg, #090d16 0%, #030712 100%);
   background-attachment: fixed;
 }
 
 /* Realistic Physical Box Simulator */
 .realistic-card {
-  @apply relative overflow-hidden rounded-[2rem] transition-all duration-300;
+  @apply relative overflow-hidden rounded-[2rem] transition-all duration-500;
   /* Thick physical frosted glass */
-  background: linear-gradient(135deg, rgba(45, 45, 50, 0.6) 0%, rgba(25, 25, 30, 0.8) 100%);
-  backdrop-filter: blur(20px);
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.7) 100%);
+  backdrop-filter: blur(24px);
   
   /* Volumetric lit borders */
   border: 1px solid transparent;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  border-left: 1px solid rgba(255, 255, 255, 0.08);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.9);
-  border-right: 1px solid rgba(0, 0, 0, 0.4);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.8);
+  border-right: 1px solid rgba(0, 0, 0, 0.3);
   
   /* Physical multi-layered shadows */
   box-shadow: 
-    8px 16px 24px -5px rgba(0, 0, 0, 0.6),
-    inset 0px 2px 4px 0px rgba(255, 255, 255, 0.06),
+    10px 20px 40px -10px rgba(0, 0, 0, 0.7),
+    inset 0px 2px 4px 0px rgba(255, 255, 255, 0.05),
     inset 0px -4px 6px 0px rgba(0, 0, 0, 0.4);
 }
 
+.realistic-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.03), transparent 60%);
+  pointer-events: none;
+  z-index: 1;
+}
+
 .realistic-card:hover {
-  @apply -translate-y-1 scale-[1.01];
+  @apply -translate-y-1 scale-[1.015];
+  background: linear-gradient(135deg, rgba(38, 51, 73, 0.45) 0%, rgba(20, 30, 52, 0.75) 100%);
   box-shadow: 
-    12px 24px 32px -5px rgba(0, 0, 0, 0.7),
-    inset 0px 2px 4px 0px rgba(255, 255, 255, 0.08),
+    15px 30px 50px -10px rgba(0, 0, 0, 0.8),
+    inset 0px 2px 4px 0px rgba(255, 255, 255, 0.07),
     inset 0px -4px 6px 0px rgba(0, 0, 0, 0.4);
+}
+
+/* Custom floating glows */
+@keyframes float-slow {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  50% { transform: translate(-20px, -40px) scale(1.15); }
+}
+
+@keyframes float-slower {
+  0%, 100% { transform: translate(0px, 0px) scale(1.1); }
+  50% { transform: translate(40px, 20px) scale(0.9); }
+}
+
+.animate-float-slow {
+  animation: float-slow 20s ease-in-out infinite;
+}
+
+.animate-float-slower {
+  animation: float-slower 25s ease-in-out infinite;
 }
 
 /* Custom scrollbar */
@@ -55,9 +86,9 @@ body {
   @apply bg-transparent;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-zinc-600 rounded-full border-[1px] border-black/30;
+  @apply bg-slate-800 rounded-full border-[1px] border-black/30;
   box-shadow: inset 1px 1px 1px rgba(255,255,255,0.2);
 }
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-zinc-400;
+  @apply bg-slate-600;
 }
