@@ -49,9 +49,9 @@ const Card = ({ title, icon: Icon, children, glowColor }) => {
 };
 
 const Row = ({ label, value }) => (
-  <div className="flex justify-between items-center group py-0.5 gap-2">
-    <span className="text-slate-400 text-xs sm:text-sm font-medium transition-colors group-hover:text-slate-300 shrink-0">{label}</span>
-    <span className="text-slate-100 text-xs sm:text-sm font-semibold tracking-wide drop-shadow-md text-right whitespace-nowrap">{value}</span>
+  <div className="flex justify-between items-start group py-1 gap-2 min-w-0">
+    <span className="text-slate-400 text-xs sm:text-sm font-medium transition-colors group-hover:text-slate-300 min-w-0 break-words">{label}</span>
+    <span className="text-slate-100 text-xs sm:text-sm font-semibold tracking-wide drop-shadow-md text-right min-w-0 break-words">{value}</span>
   </div>
 );
 
@@ -100,7 +100,7 @@ export function WeatherCards({ weatherData, airData, isFahrenheit }) {
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3.5 sm:gap-4 lg:gap-5">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3.5 sm:gap-4 lg:gap-5">
       <Card title="Temperature" icon={Thermometer} glowColor="red-500">
         <Row label="Current" value={<span className="text-red-400 text-sm sm:text-base font-bold">{getT(cur.temperature_2m)}</span>} />
         <Row label="Maximum" value={<span className="text-amber-400">↑ {getT(d.temperature_2m_max?.[0])}</span>} />
